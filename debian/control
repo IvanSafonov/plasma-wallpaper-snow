@@ -11,3 +11,4 @@ Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, qtdeclarative5-particles-plugin, plasma-workspace,
          qtdeclarative5-folderlistmodel-plugin
 Description: Live snow wallpaper for plasma 5
+ KDE plasma 5 live wallpaper snow;
