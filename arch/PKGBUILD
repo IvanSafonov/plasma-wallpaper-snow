@@ -1,0 +1,25 @@
+# Written by EXL <exlmotodev@gmail.com> on 18-AUG-2016
+
+pkgname=snow
+ver=0.1
+pkgver=v$ver
+pkgrel=1
+pkgdesc='Snowfall Live Wallpaper for KDE Plasma 5'
+arch=('any')
+url='https://github.com/IvanSafonov/plasma-wallpaper-snow/'
+depends=('plasma-workspace')
+source=("https://github.com/IvanSafonov/plasma-wallpaper-snow/archive/master.zip")
+sha256sums=('SKIP')
+makedepends=('extra-cmake-modules')
+
+build() {
+	cmake ../.. \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DBUILD_TESTING=OFF
+	make
+}
+
+package() {
+	make DESTDIR="${pkgdir}" install
+}
