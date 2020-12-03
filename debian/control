@@ -8,7 +8,7 @@ Standards-Version: 3.9.5
 
 Package: plasma-wallpaper-snow
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, qtdeclarative5-particles-plugin, plasma-workspace,
-         qtdeclarative5-folderlistmodel-plugin
+Depends: ${shlibs:Depends}, ${misc:Depends}, qml-module-qtquick-particles2, plasma-workspace,
+         qml-module-qt-labs-folderlistmodel
 Description: Live snow wallpaper for plasma 5
  KDE plasma 5 live wallpaper snow;
