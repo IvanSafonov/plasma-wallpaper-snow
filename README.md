@@ -6,6 +6,16 @@
 
 ## How to install
 
+### KDE Store
+
+It can be installed through the desktop settings. 
+
+![kde store install](./img/install.png)
+
+[KDE Store plugin link](https://store.kde.org/p/2104435/)
+
+### Manually
+
 1. Download and copy snow folder into your home plasma wallpapers.
 ```bash
 wget https://github.com/IvanSafonov/plasma-wallpaper-snow/archive/refs/heads/master.zip
