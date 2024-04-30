@@ -1,233 +1,163 @@
 /*
- *  Copyright 2015 Ivan Safonov <safonov.ivan.s@gmail.com>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  2.010-1301, USA.
- */
-import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Controls.Styles 1.3
-import QtQuick.Dialogs 1.1
-import QtQuick.Layouts 1.0
-import Qt.labs.folderlistmodel 2.0
-import org.kde.plasma.core 2.0
+    SPDX-FileCopyrightText: 2015 Ivan Safonov <safonov.ivan.s@gmail.com>
+    SPDX-FileCopyrightText: 2024 Steve Storey <sstorey@gmail.com>
 
-ColumnLayout {
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Dialogs as QQD2
+
+import org.kde.kirigami as Kirigami
+
+Kirigami.FormLayout {
     id: root
-    spacing: units.largeSpacing / 2
+    twinFormLayouts: parentLayout
 
+    // Image properties
     property string cfg_Image
     property int cfg_FillMode
-    property int cfg_Velocity
+
+    // Snowflake properties
+    property string cfg_Snowflake
     property int cfg_Particles
     property int cfg_Size
-    property string cfg_Snowflake
+    property int cfg_Velocity
 
-    GroupBox {
-        title: i18nd("plasma_applet_org.kde.snow", "Background")
-        Layout.fillWidth: true
+    Kirigami.Separator {
+        id: backgroundSeparator
+        Kirigami.FormData.isSection: true
+        Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Background")
+        visible: true
+    }
 
-        GridLayout {
-            columnSpacing: units.largeSpacing / 2
-            rowSpacing: units.largeSpacing / 2
-            columns: 2
+    QQC2.Button {
+        Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Image:")
 
-            Label {
-                text: i18nd("plasma_applet_org.kde.snow", "Image:")
-                Layout.alignment: Qt.AlignRight
-            }
+        // These realign the Image component up a bit
+        // to fix the default alignment
+        anchors.top: backgroundSeparator.top
+        anchors.topMargin: 6
 
-            Rectangle {
-                border.color: "black"
-                border.width: 1
-                width: 160
-                height: 90
-                Image {
-                    id: img1
-                    anchors.margins: 2
-                    anchors.fill: parent
-                    fillMode: cfg_FillMode
-                    source: cfg_Image
-                    antialiasing: true
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: fileDialog.open()
-                    }
-                }
-            }
+        width: 240
+        height: 135
 
-            Label {
-                text: i18nd("plasma_applet_org.kde.snow", "Positioning:")
-                Layout.alignment: Qt.AlignRight
-            }
-
-            ComboBox {
-                model: [
-                    {
-                        'label': i18nd("plasma_applet_org.kde.image", "Scaled and Cropped"),
-                        'fillMode': Image.PreserveAspectCrop
-                    },
-                    {
-                        'label': i18nd("plasma_applet_org.kde.image", "Scaled"),
-                        'fillMode': Image.Stretch
-                    },
-                    {
-                        'label': i18nd("plasma_applet_org.kde.image", "Scaled, Keep Proportions"),
-                        'fillMode': Image.PreserveAspectFit
-                    },
-                    {
-                        'label': i18nd("plasma_applet_org.kde.image", "Centered"),
-                        'fillMode': Image.Pad
-                    },
-                    {
-                        'label': i18nd("plasma_applet_org.kde.image", "Tiled"),
-                        'fillMode': Image.Tile
-                    }
-                ]
-                textRole: "label"
-                property int fillMode: cfg_FillMode
-                onFillModeChanged: {
-                    for (var i = 0; i < model.length; i++) {
-                        if (model[i].fillMode == fillMode) {
-                            currentIndex = i;
-                            break
-                        }
-                    }
-                }
-                onCurrentIndexChanged: cfg_FillMode = model[currentIndex].fillMode
-                Layout.fillWidth: true
+        // Causes the width property to be honoured by the looks of things
+        text: "                                                    "
+        Image {
+            id: backgroundImage
+            anchors.margins: 2
+            anchors.fill: parent
+            fillMode: cfg_FillMode
+            source: cfg_Image
+            antialiasing: true
+            MouseArea {
+                anchors.fill: parent
+                onClicked: fileDialog.open()
             }
         }
     }
 
-    GroupBox {
-        title: i18nd("plasma_applet_org.kde.snow", "Snow")
-        Layout.fillWidth: true
+    QQC2.ComboBox {
+        Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Positioning:")
 
-        GridLayout {
-            columnSpacing: units.largeSpacing / 2
-            rowSpacing: units.largeSpacing / 2
-            columns: 2
-
-            Label {
-                text: i18nd("plasma_applet_org.kde.snow", "Snowflake:")
-                Layout.alignment: Qt.AlignRight
+        model: [
+            {
+                'label': i18nd("plasma_applet_org.kde.image", "Scaled and Cropped"),
+                'fillMode': Image.PreserveAspectCrop
+            },
+            {
+                'label': i18nd("plasma_applet_org.kde.image", "Scaled"),
+                'fillMode': Image.Stretch
+            },
+            {
+                'label': i18nd("plasma_applet_org.kde.image", "Scaled, Keep Proportions"),
+                'fillMode': Image.PreserveAspectFit
+            },
+            {
+                'label': i18nd("plasma_applet_org.kde.image", "Centered"),
+                'fillMode': Image.Pad
+            },
+            {
+                'label': i18nd("plasma_applet_org.kde.image", "Tiled"),
+                'fillMode': Image.Tile
             }
-            ComboBox {
-                textRole: "filePath"
-                model : FolderListModel {
-                    folder: "data"
-                    showDirs: false
-                    nameFilters: ["*.png"]
-                }
+        ]
+        textRole: "label"
+        valueRole: "fillMode"
+        // Set the initial currentIndex to the value stored in the config.
+        Component.onCompleted: currentIndex = indexOfValue(cfg_FillMode)
+        // Update the stored condfiguration when the selected value changes
+        onActivated: cfg_FillMode = currentValue
+    }
 
-                onCurrentIndexChanged: {
-                    if (count)
-                        cfg_Snowflake = model.get(currentIndex, "filePath")
-                }
+    // Snow properties
 
-                property string snowflake: cfg_Snowflake
-                onCountChanged: setSnowflake()
-                onSnowflakeChanged: setSnowflake()
+    Kirigami.Separator {
+        id: snowSeparator
+        Kirigami.FormData.isSection: true
+        Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Snow")
+        visible: true
+    }
 
-                function setSnowflake() {
-                    for (var i = 0; i < count; i++) {
-                        if (model.get(i, "filePath") == snowflake) {
-                            currentIndex = i;
-                            return
-                        }
-                    }
-                    if (count && currentIndex == 0)
-                        cfg_Snowflake = model.get(currentIndex, "filePath")
-                }
+    QQC2.ComboBox {
+        Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Snowflake:")
 
-                style: ComboBoxStyle {
-                    label: Rectangle {
-                        implicitHeight: 40
-                        implicitWidth: 60
-                        color: "black"
-                        Image {
-                            anchors.fill: parent
-                            fillMode: Image.PreserveAspectFit
-                            source: control.currentText
-                        }
-                    }
-                    property Component __dropDownStyle: MenuStyle {
-                        __menuItemType: "comboboxitem"
+        textRole: "name"
+        valueRole: 'filePath'
+        model: [{
+            name: "Snwoball",
+            filePath: "data/snowflake1.png"
+        },{
+            name: "Small",
+            filePath: "data/snowflake2.png"
+        },{
+            name: "Large",
+            filePath: "data/snowflake3.png"
+        }]
 
-                        itemDelegate.label: Rectangle {
-                            implicitHeight: 40
-                            implicitWidth: 60
-                            color: "black"
-                            Image {
-                                anchors.fill: parent
-                                fillMode: Image.PreserveAspectFit
-                                source: styleData.text
-                            }
-                        }
-                    }
-                }
-            }
+        Component.onCompleted: currentIndex = indexOfValue(cfg_Snowflake)
+        onActivated: cfg_Snowflake = currentValue
+    }
 
-            Label {
-                text: i18nd("plasma_applet_org.kde.snow", "Number of snowflakes:")
-                Layout.alignment: Qt.AlignRight
-            }
-            SpinBox {
-                value: cfg_Particles
-                minimumValue: 50
-                maximumValue: 2000
-                onValueChanged: cfg_Particles = value
-            }
+    QQC2.SpinBox {
+        Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Number of snowflakes:")
 
-            Label {
-                text: i18nd("plasma_applet_org.kde.snow", "Size of snowflake:")
-                Layout.alignment: Qt.AlignRight
-            }
-            SpinBox {
-                value: cfg_Size
-                suffix: i18nd("plasma_applet_org.kde.snow", " pixels")
-                minimumValue: 5
-                maximumValue: 50
-                onValueChanged: cfg_Size = value
-            }
+        value: cfg_Particles
+        from: 50
+        to: 2000
+        onValueChanged: cfg_Particles = value
+    }
 
-            Label {
-                text: i18nd("plasma_applet_org.kde.snow", "Speed:")
-                Layout.alignment: Qt.AlignRight
-            }
-            SpinBox {
-                value: cfg_Velocity
-                suffix: i18nd("plasma_applet_org.kde.snow", " pixels/sec")
-                minimumValue: 10
-                maximumValue: 500
-                onValueChanged: cfg_Velocity = value
-            }
+    QQC2.SpinBox {
+        Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Size of snowflake:")
+
+        value: cfg_Size
+        from: 5
+        to: 50
+        onValueChanged: cfg_Size = value
+    }
+
+    QQC2.SpinBox {
+        Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Speed:")
+
+        value: cfg_Velocity
+        textFromValue: function(value) {
+            return value + " " + i18nd("plasma_applet_org.kde.snow", " pixels/sec")
         }
+        from: 10
+        to: 500
+        onValueChanged: cfg_Velocity = value
     }
 
-    Item {
-        // Spacer
-        Layout.fillHeight: true
-    }
-
-    FileDialog {
+    // Used for choosing the background image
+    QQD2.FileDialog {
         id: fileDialog
         title: i18nd("plasma_applet_org.kde.snow", "Please choose an image")
         nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
         onAccepted: {
-            cfg_Image = fileDialog.fileUrls[0]
+            cfg_Image = selectedFile
+            backgroundImage.source = selectedFile
         }
     }
 }
