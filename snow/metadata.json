@@ -1,0 +1,22 @@
+{
+    "KPackageStructure": "Plasma/Wallpaper",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "sstorey@gmail.com",
+                "Name": "Steve Storey"
+            },
+            {
+                "Email": "safonov.ivan.s@gmail.com",
+                "Name": "Ivan Safonov"
+            }
+        ],
+        "Category": "",
+        "Description": "Snow",
+        "Icon": "preferences-desktop-color",
+        "Id": "org.kde.snow",
+        "License": "GPLv2+",
+        "Name": "Snow"
+    },
+    "X-KDE-ParentApp": "org.kde.plasmashell"
+}

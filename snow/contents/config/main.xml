@@ -31,7 +31,7 @@
     </entry>
     <entry name="Snowflake" type="String">
       <label>Snowflake image path</label>
-      <default></default>
+      <default>data/snowflake1.png</default>
     </entry>
   </group>
 
