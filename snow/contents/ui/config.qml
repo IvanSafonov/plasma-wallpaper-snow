@@ -106,7 +106,7 @@ Kirigami.FormLayout {
         textRole: "name"
         valueRole: 'filePath'
         model: [{
-            name: "Snwoball",
+            name: "Snowball",
             filePath: "data/snowflake1.png"
         },{
             name: "Small",
