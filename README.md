@@ -12,7 +12,7 @@ It can be installed through the desktop settings.
 
 ![kde store install](./img/install.png)
 
-[KDE Store plugin link](https://store.kde.org/p/2104435/)
+[KDE Store plugin link](https://store.kde.org/p/2151253/)
 
 ### Manually
 
