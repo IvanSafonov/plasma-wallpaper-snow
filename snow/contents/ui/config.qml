@@ -1,12 +1,12 @@
 /*
-    SPDX-FileCopyrightText: 2015 Ivan Safonov <safonov.ivan.s@gmail.com>
+    SPDX-FileCopyrightText: 2015, 2024 Ivan Safonov <safonov.ivan.s@gmail.com>
     SPDX-FileCopyrightText: 2024 Steve Storey <sstorey@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 import QtQuick
-import QtQuick.Controls as QQC2
-import QtQuick.Dialogs as QQD2
+import QtQuick.Controls
+import QtQuick.Dialogs
 
 import org.kde.kirigami as Kirigami
 
@@ -25,28 +25,20 @@ Kirigami.FormLayout {
     property int cfg_Velocity
 
     Kirigami.Separator {
-        id: backgroundSeparator
         Kirigami.FormData.isSection: true
         Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Background")
         visible: true
     }
 
-    QQC2.Button {
+    Button {
         Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Image:")
 
-        // These realign the Image component up a bit
-        // to fix the default alignment
-        anchors.top: backgroundSeparator.top
-        anchors.topMargin: 6
+        implicitWidth: 240
+        implicitHeight: 135
 
-        width: 240
-        height: 135
-
-        // Causes the width property to be honoured by the looks of things
-        text: "                                                    "
         Image {
             id: backgroundImage
-            anchors.margins: 2
+            anchors.margins: 4
             anchors.fill: parent
             fillMode: cfg_FillMode
             source: cfg_Image
@@ -58,7 +50,7 @@ Kirigami.FormLayout {
         }
     }
 
-    QQC2.ComboBox {
+    ComboBox {
         Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Positioning:")
 
         model: [
@@ -94,33 +86,51 @@ Kirigami.FormLayout {
     // Snow properties
 
     Kirigami.Separator {
-        id: snowSeparator
         Kirigami.FormData.isSection: true
         Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Snow")
         visible: true
     }
 
-    QQC2.ComboBox {
+    ComboBox {
+        id: snowflakeSelector
         Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Snowflake:")
+        implicitHeight: 40
+        implicitWidth: 60
 
-        textRole: "name"
-        valueRole: 'filePath'
-        model: [{
-            name: "Snowball",
-            filePath: "data/snowflake1.png"
-        },{
-            name: "Small",
-            filePath: "data/snowflake2.png"
-        },{
-            name: "Large",
-            filePath: "data/snowflake3.png"
-        }]
+        model: [
+            "data/snowflake1.png",
+            "data/snowflake2.png",
+            "data/snowflake3.png"
+        ]
 
         Component.onCompleted: currentIndex = indexOfValue(cfg_Snowflake)
         onActivated: cfg_Snowflake = currentValue
+
+        contentItem: Rectangle {
+            color: "black"
+            Image {
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectFit
+                source: snowflakeSelector.currentValue
+            }
+        }
+
+        delegate: ItemDelegate {
+            width: snowflakeSelector.width
+            contentItem: Rectangle {
+                implicitHeight: 40
+                color: "black"
+                Image {
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectFit
+                    source: modelData
+                }
+            }
+            highlighted: snowflakeSelector.highlightedIndex === index
+        }
     }
 
-    QQC2.SpinBox {
+    SpinBox {
         Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Number of snowflakes:")
 
         value: cfg_Particles
@@ -129,7 +139,7 @@ Kirigami.FormLayout {
         onValueChanged: cfg_Particles = value
     }
 
-    QQC2.SpinBox {
+    SpinBox {
         Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Size of snowflake:")
 
         value: cfg_Size
@@ -138,20 +148,17 @@ Kirigami.FormLayout {
         onValueChanged: cfg_Size = value
     }
 
-    QQC2.SpinBox {
+    SpinBox {
         Kirigami.FormData.label: i18nd("plasma_applet_org.kde.snow", "Speed:")
 
         value: cfg_Velocity
-        textFromValue: function(value) {
-            return value + " " + i18nd("plasma_applet_org.kde.snow", " pixels/sec")
-        }
         from: 10
         to: 500
         onValueChanged: cfg_Velocity = value
     }
 
     // Used for choosing the background image
-    QQD2.FileDialog {
+    FileDialog {
         id: fileDialog
         title: i18nd("plasma_applet_org.kde.snow", "Please choose an image")
         nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
